@@ -54,7 +54,11 @@ export class ArticlesService {
         username: query.favorited,
       }, {relations: ['favorites']});
       const ids = author.favorites.map((el) => el.id);
-      queryBuilder.andWhere('articles.authorId IN(:...ids)', { ids });
+      if (ids.length > 0) {
+        queryBuilder.andWhere('articles.id IN(:...ids)', { ids });
+      } else {
+        queryBuilder.andWhere('1<0');
+      }
     }
 
     let favoriteIds: number[] = [];
